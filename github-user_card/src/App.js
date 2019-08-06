@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios'
-import './App.css';
+import './scss/index.scss'
 import UserProfileCard from './components/UserProfileCard'
 import FollowersCarousel from './components/UserFollowerCarousel'
+import UserHeader from './components/UserHeader'
 
 class App extends React.Component{
 
@@ -50,20 +51,20 @@ class App extends React.Component{
   componentDidUpdate(prevProps, prevState){
 
     if(prevState.userInfo !== this.state.userInfo || prevState.userFollowers !== this.state.userFollowers){
-      
-      console.log('component did update', this.state.userInfo, this.state.userFollowers)
 
         {this.state.userFollowers.map( follower => {
 
           axios
             .get(`https://api.github.com/users/${follower.login}`)
+
             .then ( res => {
               this.setState({usableFollowers : [...this.state.usableFollowers, res.data]})
-              console.log(this.state.usableFollowers)
             })
+
             .catch(err => {
               console.log(err)
             })
+
         })}
       
     }
@@ -76,7 +77,7 @@ class App extends React.Component{
       <div>
         <header >
           <h1> Github User Info </h1>
-          <UserProfileCard 
+          <UserHeader
             name = {this.state.userInfo.name}
             avatar_url = {this.state.userInfo.avatar_url}
             location = {this.state.userInfo.location}
@@ -87,7 +88,9 @@ class App extends React.Component{
             email = {this.state.userInfo.email} 
             html_url = {this.state.userInfo.html_url} />
           </header>
-          <FollowersCarousel usableFollowers = {this.state.usableFollowers} /> 
+          <FollowersCarousel usableFollowers = {this.state.usableFollowers} 
+                              userName = {this.state.userInfo.name}
+            /> 
       </div>
     )
   }
