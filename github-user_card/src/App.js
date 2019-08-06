@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios'
 import './App.css';
+import UserProfileCard from './components/UserProfileCard'
+import FollowersCarousel from './components/UserFollowerCarousel'
 
 class App extends React.Component{
 
@@ -58,7 +60,20 @@ class App extends React.Component{
   render(){
     return(
       <div>
-        <h1> Hello </h1>
+        <header >
+          <h1> Github User Info </h1>
+          <UserProfileCard 
+            name = {this.state.userInfo.name}
+            avatar_url = {this.state.userInfo.avatar_url}
+            location = {this.state.userInfo.location}
+            login = {this.state.userInfo.login}
+            followers = {this.state.userInfo.followers}
+            following = {this.state.userInfo.following}
+            bio = {this.state.userInfo.bio} 
+            email = {this.state.userInfo.email} 
+            html_url = {this.state.userInfo.html_url} />
+          </header>
+          <FollowersCarousel userFollowers = {this.state.userFollowers} /> 
       </div>
     )
   }
