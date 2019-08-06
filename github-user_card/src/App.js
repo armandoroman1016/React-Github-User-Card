@@ -12,7 +12,8 @@ class App extends React.Component{
 
     this.state = {
       userInfo : {},
-      userFollowers : []
+      userFollowers : [],
+      usableFollowers : []
     }
 
   }
@@ -52,6 +53,19 @@ class App extends React.Component{
       
       console.log('component did update', this.state.userInfo, this.state.userFollowers)
 
+        {this.state.userFollowers.map( follower => {
+
+          axios
+            .get(`https://api.github.com/users/${follower.login}`)
+            .then ( res => {
+              this.setState({usableFollowers : [...this.state.usableFollowers, res.data]})
+              console.log(this.state.usableFollowers)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        })}
+      
     }
 
   }
@@ -73,7 +87,7 @@ class App extends React.Component{
             email = {this.state.userInfo.email} 
             html_url = {this.state.userInfo.html_url} />
           </header>
-          <FollowersCarousel userFollowers = {this.state.userFollowers} /> 
+          <FollowersCarousel usableFollowers = {this.state.usableFollowers} /> 
       </div>
     )
   }

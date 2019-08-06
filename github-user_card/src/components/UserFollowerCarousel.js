@@ -6,18 +6,23 @@ import {
     CarouselIndicators,
     CarouselCaption
 } from "reactstrap";
+
+import axios from 'axios'
 import UserProfileCard from "./UserProfileCard";
 
 
 class FollowersCarousel extends React.Component {
-    
 
+    constructor(){
+        super()
+        this.state = {
+        }
+    }
 
     render() {
         return (
             <div>
-            {this.props.userFollowers.map( follower => {
-                console.log(follower)
+                {this.props.usableFollowers.map( follower => {
                 return (
                     <UserProfileCard
                         name={follower.name}
@@ -31,7 +36,7 @@ class FollowersCarousel extends React.Component {
                         html_url={follower.html_url}
                     />
                 )
-            })}
+                })}
             </div>
         )
     }
