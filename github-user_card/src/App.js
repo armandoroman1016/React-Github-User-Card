@@ -4,6 +4,8 @@ import './scss/index.scss'
 import FollowersList from './components/UserFollowerList'
 import UserHeader from './components/UserHeader'
 
+import { Form , Button} from 'react-bootstrap'
+
 class App extends React.Component{
 
   constructor(){
@@ -11,16 +13,18 @@ class App extends React.Component{
     super();
 
     this.state = {
+      currentUser : 'armandoroman1016',
       userInfo : {},
       userFollowers : [],
-      usableFollowers : []
+      usableFollowers : [],
+      inputValue : ''
     }
 
   }
 
   componentDidMount(){
     axios
-      .get('https://api.github.com/users/armandoroman1016')
+      .get(`https://api.github.com/users/${this.state.currentUser}`)
 
       .then( userData => {
 
@@ -30,7 +34,7 @@ class App extends React.Component{
 
       .then(  () => {
 
-        axios.get('https://api.github.com/users/armandoroman1016/followers')
+        axios.get(`https://api.github.com/users/${this.state.currentUser}/followers`)
 
           .then( followerData => {
 
@@ -49,34 +53,99 @@ class App extends React.Component{
 
   componentDidUpdate(prevProps, prevState){
 
-    if(prevState.userInfo !== this.state.userInfo || prevState.userFollowers !== this.state.userFollowers){
+    if (prevState.userInfo !== this.state.userInfo || prevState.userFollowers !== this.state.userFollowers || prevState.currentUser !== this.state.currentUser){
 
-        this.state.userFollowers.map( follower => {
+      prevState.currentUser !== this.state.currentUser ? (
 
-          axios
-            .get(`https://api.github.com/users/${follower.login}`)
+      axios
+      .get(`https://api.github.com/users/${this.state.currentUser}`)
 
-            .then ( res => {
-              this.setState({usableFollowers : [...this.state.usableFollowers, res.data]})
-            })
+      .then( userData => {
 
-            .catch(err => {
-              console.log(err)
-            })
+        this.setState({ userInfo : userData.data })
+
+      })
+
+      .then(  () => {
+
+        axios.get(`https://api.github.com/users/${this.state.currentUser}/followers`)
+
+          .then( followerData => {
+
+            this.setState({ userFollowers : followerData.data})
+
+          })
 
         })
-      
-    }
 
+      .catch( err => {
+
+        console.log(err)
+
+      })
+
+      ) : 
+      
+      this.state.userFollowers.map( follower => {
+        
+
+        axios
+          .get(`https://api.github.com/users/${follower.login}`)
+
+          .then ( res => {
+
+            
+            this.setState({usableFollowers : [...this.state.userFollowers, res.data]})
+
+          })
+
+          .catch(err => {
+            console.log(err)
+          })
+
+          console.log(this.state.usableFollowers)
+      })
+
+    }
   }
+  
+
+  handleChange = e => {
+    this.setState({
+        inputValue : e.target.value
+    })
+    console.log(this.state.inputValue)
+}
+
+  handleSubmit = e => {
+    e.preventDefault()
+    this.setState({
+      currentUser : this.state.inputValue,
+      userFollowers : [],
+    })
+    
+}
 
 
   render(){
     return(
       <div>
-        <header >
+        <div className = 'nav'>
           <h1> Github User Info </h1>
-          {<UserHeader
+          <div className='search-container'>
+                <Form onSubmit = {this.handleSubmit}>
+                    <Form.Group>
+                        <Form.Label>Search Other Github Profiles</Form.Label>
+                        <Form.Control type="text" placeholder="Enter GitHub Username . . ." value = {this.state.value} onChange = {this.handleChange}/>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Search
+                    </Button>
+                </Form>
+            </div>
+        </div>
+        <header >
+          <UserHeader
             name = {this.state.userInfo.name}
             avatar_url = {this.state.userInfo.avatar_url}
             location = {this.state.userInfo.location}
@@ -85,7 +154,7 @@ class App extends React.Component{
             following = {this.state.userInfo.following}
             bio = {this.state.userInfo.bio} 
             email = {this.state.userInfo.email} 
-            html_url = {this.state.userInfo.html_url} />}
+            html_url = {this.state.userInfo.html_url} />
         </header>
           <FollowersList usableFollowers = {this.state.usableFollowers} 
                           userName = {this.state.userInfo.name}
