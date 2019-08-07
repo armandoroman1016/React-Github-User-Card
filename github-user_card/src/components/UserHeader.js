@@ -1,18 +1,14 @@
 import React from "react";
-import { Jumbotron, Button, Link } from "react-bootstrap";
+import { Jumbotron, Button } from "react-bootstrap";
 
 class UserHeader extends React.Component {
-
-    constructor() {
-        super()
-    }
 
     render() {
         return (
 
             <Jumbotron className = 'header'>
                 <div className = 'header-img-container'>
-                    <img src = {this.props.avatar_url} />
+                    <img src = {this.props.avatar_url} alt = 'user-profile-avatar'/>
                 </div>
                 <div className = 'header-details'>
                     <h2>{this.props.name}'s Github Details</h2>
@@ -22,7 +18,7 @@ class UserHeader extends React.Component {
                     <p>Following : {this.props.following}</p>
                     <p>Bio : {this.props.bio}</p>
                     <p>Contact : {this.props.email}</p>
-                    <a to = {this.props.html_url}>
+                    <a href = {this.props.html_url}>
                         <Button variant="primary">Visit Github Profile</Button>
                     </a>
                 </div>
