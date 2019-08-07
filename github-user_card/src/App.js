@@ -88,14 +88,13 @@ class App extends React.Component{
       
       this.state.userFollowers.map( follower => {
         
-
         axios
           .get(`https://api.github.com/users/${follower.login}`)
 
           .then ( res => {
 
             
-            this.setState({usableFollowers : [...this.state.userFollowers, res.data]})
+            this.setState({usableFollowers : [...this.state.useableFollowers, res.data]})
 
           })
 
@@ -120,8 +119,11 @@ class App extends React.Component{
   handleSubmit = e => {
     e.preventDefault()
     this.setState({
-      currentUser : this.state.inputValue,
       userFollowers : [],
+      userInfo : {},
+      usableFollowers : [],
+      inputValue : '',
+      currentUser : this.state.inputValue,
     })
     
 }
